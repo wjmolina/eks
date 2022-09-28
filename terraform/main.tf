@@ -33,7 +33,7 @@ resource "aws_iam_role" "eks" {
 }
 
 data "aws_iam_policy" "AmazonEKSClusterPolicy" {
-  arn = "AmazonEKSClusterPolicy"
+  arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
