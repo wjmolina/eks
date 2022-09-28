@@ -1,3 +1,22 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+
+  backend "s3" {
+    bucket = "wmolina"
+    region = "us-west-1"
+    key    = "eks"
+  }
+}
+
+provider "aws" {
+  region = "us-west-1"
+}
+
 resource "aws_iam_role" "eks" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -17,7 +36,7 @@ data "aws_iam_policy" "AmazonEKSClusterPolicy" {
   arn = "AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "" {
+resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
   role       = aws_iam_role.eks
   policy_arn = aws_iam_policy.AmazonEKSClusterPolicy.arn
 }
