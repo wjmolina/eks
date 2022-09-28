@@ -41,7 +41,7 @@ resource "aws_iam_role_policy_attachment" "eks" {
   policy_arn = data.aws_iam_policy.eks.arn
 }
 
-resource "aws_cloudformation_stack" "vpc" {
+resource "aws_cloudformation_stack" "eks" {
   name         = "eks"
   template_url = "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-sample.yaml"
 }
@@ -50,6 +50,6 @@ resource "aws_eks_cluster" "eks" {
   name     = "eks"
   role_arn = aws_iam_role.eks.arn
   vpc_config {
-    subnet_ids = split(",", aws_cloudformation_stack.vpc.outputs["SubnetIds"])
+    subnet_ids = split(",", aws_cloudformation_stack.eks.outputs["SubnetIds"])
   }
 }
