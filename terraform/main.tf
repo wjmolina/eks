@@ -46,14 +46,10 @@ resource "aws_cloudformation_stack" "vpc" {
   template_url = "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-sample.yaml"
 }
 
-output "cloud_formation" {
-  value = aws_cloudformation_stack.vpc.outputs
+resource "aws_eks_cluster" "eks" {
+  name     = "eks"
+  role_arn = aws_iam_role.eks.arn
+  vpc_config {
+    subnet_ids = aws_cloudformation_stack.vpc.outputs["SubnetIds"]
+  }
 }
-
-# resource "aws_eks_cluster" "eks" {
-#   name     = "eks"
-#   role_arn = aws_iam_role.eks.arn
-#   vpc_config {
-#     subnet_ids = [data.aws_cloudformation_stack.vpc.outputs["SubnetId"]]
-#   }
-# }
