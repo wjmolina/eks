@@ -37,6 +37,6 @@ data "aws_iam_policy" "AmazonEKSClusterPolicy" {
 }
 
 resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
-  role       = aws_iam_role.eks
+  role       = aws_iam_role.eks.name
   policy_arn = data.aws_iam_policy.AmazonEKSClusterPolicy.arn
 }
