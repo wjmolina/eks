@@ -47,7 +47,7 @@ resource "aws_cloudformation_stack" "vpc" {
 }
 
 output "cloud_formation" {
-  value = data.aws_cloudformation_stack.vpc.outputs
+  value = aws_cloudformation_stack.vpc.outputs
 }
 
 # resource "aws_eks_cluster" "eks" {
