@@ -1,4 +1,4 @@
-name: deployment
+name: cicd
 
 on:
   push:
@@ -32,9 +32,9 @@ jobs:
       - name: terraform apply
         run: terraform apply -auto-approve
 
-  k8s:
+  kubernetes:
     needs: terraform
-    name: k8s
+    name: kubernetes
     runs-on: ubuntu-latest
     steps:
       - name: configure aws credentials
@@ -49,5 +49,17 @@ jobs:
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
-      - name: get pods
+      - name: create namespace
         run: kubectl create ns example-app
+
+      - name: apply secret
+        run: kubectl apply -n example-app -f kubernetes/secrets/secret.yml
+
+      - name: apply configmap
+        run: kubectl apply -n example-app -f kubernetes/configmaps/configmap.yml
+
+      - name: apply deployment
+        run: kubectl apply -n example-app -f kubernetes/deployments/deployment.yml
+
+      - name: apply service
+        run: kubectl apply -n example-app -f kubernetes/services/service.yml
