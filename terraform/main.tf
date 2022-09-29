@@ -32,13 +32,13 @@ resource "aws_iam_role" "eks" {
   })
 }
 
-data "aws_iam_policy" "eks" {
+data "aws_iam_policy" "AmazonEKSClusterPolicy" {
   arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "eks" {
+resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
   role       = aws_iam_role.eks.name
-  policy_arn = data.aws_iam_policy.eks.arn
+  policy_arn = data.aws_iam_policy.AmazonEKSClusterPolicy.arn
 }
 
 resource "aws_cloudformation_stack" "eks" {
@@ -53,4 +53,46 @@ resource "aws_eks_cluster" "eks" {
     subnet_ids         = split(",", aws_cloudformation_stack.eks.outputs["SubnetIds"])
     security_group_ids = split(",", aws_cloudformation_stack.eks.outputs["SecurityGroups"])
   }
+}
+
+resource "aws_iam_role" "ec2" {
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      },
+    ]
+  })
+}
+
+data "aws_iam_policy" "AmazonEKSWorkerNodePolicy" {
+  arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+data "aws_iam_policy" "AmazonEKS_CNI_Policy" {
+  arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+data "aws_iam_policy" "AmazonEC2ContainerRegistryReadOnly" {
+  arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_AmazonEKSWorkerNodePolicy" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = data.aws_iam_policy.AmazonEKSWorkerNodePolicy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eks_AmazonEKS_CNI_Policy" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = data.aws_iam_policy.AmazonEKS_CNI_Policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eks_AmazonEC2ContainerRegistryReadOnly" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = data.aws_iam_policy.AmazonEC2ContainerRegistryReadOnly.arn
 }
