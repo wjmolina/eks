@@ -6,13 +6,13 @@ on:
       - main
 
 jobs:
-  terraform:
-    name: terraform
+  cicd:
+    name: cicd
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: terraform
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -20,52 +20,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
 
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: setup terraform
+      - name: terraform
         uses: hashicorp/setup-terraform@v2
+        working-directory: terraform
+        run: |
+          terraform init
+          terraform apply -auto-approve
 
-      - name: terraform init
-        run: terraform init
-
-      - name: terraform apply
-        run: terraform apply -auto-approve
-
-  kubernetes:
-    needs: terraform
-    name: kubernetes
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: kubernetes
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-1
-
-      - name: kubectl action
+      - name: kubectl
         uses: tale/kubectl-action@v1
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-
-      - name: create namespace
-        run: kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: apply secret
-        run: kubectl apply -n example-app -f secrets/secret.yml
-
-      - name: apply configmap
-        run: kubectl apply -n example-app -f configmaps/configmap.yml
-
-      - name: apply deployment
-        run: kubectl apply -n example-app -f deployments/deployment.yml
-
-      - name: apply service
-        run: kubectl apply -n example-app -f services/service.yml
+        working-directory: kubernetes
+        run: |
+          kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply -n example-app -f secrets/secret.yml
+          kubectl apply -n example-app -f configmaps/configmap.yml
+          kubectl apply -n example-app -f deployments/deployment.yml
+          kubectl apply -n example-app -f services/service.yml
