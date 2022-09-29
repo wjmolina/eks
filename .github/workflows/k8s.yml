@@ -23,4 +23,4 @@ jobs:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
       - name: get pods
-        run: kubectl get pods
+        run: kubectl create ns example-app
