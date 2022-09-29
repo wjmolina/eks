@@ -52,6 +52,12 @@ jobs:
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
+      - name: pwd
+        run: pwd
+
+      - name: ls -la
+        run: ls -la
+
       - name: create namespace
         run: kubectl create ns example-app
 
