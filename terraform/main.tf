@@ -96,3 +96,16 @@ resource "aws_iam_role_policy_attachment" "eks_AmazonEC2ContainerRegistryReadOnl
   role       = aws_iam_role.ec2.name
   policy_arn = data.aws_iam_policy.AmazonEC2ContainerRegistryReadOnly.arn
 }
+
+resource "aws_eks_node_group" "eks" {
+  cluster_name   = aws_eks_cluster.eks.name
+  node_role_arn  = aws_iam_role.ec2.name
+  subnet_ids     = split(",", aws_cloudformation_stack.eks.outputs["SubnetIds"])[0]
+  disk_size      = 200
+  instance_types = ["t2.small"]
+  scaling_config {
+    min_size     = 1
+    max_size     = 2
+    desired_size = 1
+  }
+}
