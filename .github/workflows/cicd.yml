@@ -56,21 +56,16 @@ jobs:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
       - name: create namespace
-        if: always()
-        run: kubectl create ns example-app
+        run: kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
 
       - name: apply secret
-        if: always()
         run: kubectl apply -n example-app -f secrets/secret.yml
 
       - name: apply configmap
-        if: always()
         run: kubectl apply -n example-app -f configmaps/configmap.yml
 
       - name: apply deployment
-        if: always()
         run: kubectl apply -n example-app -f deployments/deployment.yml
 
       - name: apply service
-        if: always()
         run: kubectl apply -n example-app -f services/service.yml
