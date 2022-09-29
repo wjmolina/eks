@@ -36,7 +36,13 @@ jobs:
     needs: terraform
     name: kubernetes
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -48,14 +54,6 @@ jobs:
         uses: tale/kubectl-action@v1
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-
-      - name: pwd
-        if: always()
-        run: pwd
-
-      - name: ls -la
-        if: always()
-        run: ls -la
 
       - name: create namespace
         if: always()
