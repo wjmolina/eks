@@ -36,6 +36,9 @@ jobs:
     needs: terraform
     name: kubernetes
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kubernetes
     steps:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -54,16 +57,16 @@ jobs:
 
       - name: apply secret
         if: always()
-        run: kubectl apply -n example-app -f kubernetes/secrets/secret.yml
+        run: kubectl apply -n example-app -f secrets/secret.yml
 
       - name: apply configmap
         if: always()
-        run: kubectl apply -n example-app -f kubernetes/configmaps/configmap.yml
+        run: kubectl apply -n example-app -f configmaps/configmap.yml
 
       - name: apply deployment
         if: always()
-        run: kubectl apply -n example-app -f kubernetes/deployments/deployment.yml
+        run: kubectl apply -n example-app -f deployments/deployment.yml
 
       - name: apply service
         if: always()
-        run: kubectl apply -n example-app -f kubernetes/services/service.yml
+        run: kubectl apply -n example-app -f services/service.yml
