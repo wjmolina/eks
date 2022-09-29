@@ -50,16 +50,16 @@ jobs:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
       - name: create namespace
-        run: kubectl create ns example-app
+        run: kubectl create ns example-app > nul 2> nul
 
       - name: apply secret
-        run: kubectl apply -n example-app -f kubernetes/secrets/secret.yml
+        run: kubectl apply -n example-app -f kubernetes/secrets/secret.yml > nul 2> nul
 
       - name: apply configmap
-        run: kubectl apply -n example-app -f kubernetes/configmaps/configmap.yml
+        run: kubectl apply -n example-app -f kubernetes/configmaps/configmap.yml > nul 2> nul
 
       - name: apply deployment
-        run: kubectl apply -n example-app -f kubernetes/deployments/deployment.yml
+        run: kubectl apply -n example-app -f kubernetes/deployments/deployment.yml > nul 2> nul
 
       - name: apply service
-        run: kubectl apply -n example-app -f kubernetes/services/service.yml
+        run: kubectl apply -n example-app -f kubernetes/services/service.yml > nul 2> nul
