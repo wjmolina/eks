@@ -22,6 +22,8 @@ jobs:
 
       - name: terraform
         uses: hashicorp/setup-terraform@v2
+
+      - name: terraform run
         working-directory: terraform
         run: |
           terraform init
@@ -31,6 +33,8 @@ jobs:
         uses: tale/kubectl-action@v1
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+
+      - name: kubectl run
         working-directory: kubernetes
         run: |
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
