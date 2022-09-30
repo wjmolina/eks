@@ -3,5 +3,5 @@ output "cloud_formation" {
 }
 
 output "aws_eks_cluster_eks_name" {
-  value = aws_cloudformation_stack.eks.outputs
+  value = aws_eks_cluster.eks.name
 }
