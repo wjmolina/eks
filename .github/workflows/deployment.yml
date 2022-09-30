@@ -28,7 +28,7 @@ jobs:
     needs: docker
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.apply.outputs.eks_name }}
+      output1: ${{ steps.output.outputs.eks_name }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -47,7 +47,10 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
-          echo "::set-output name=eks_name::$(terraform -chdir=terraform output aws_eks_cluster_eks_name | tr -d '"')"
+      - name: output
+        working-directory: terraform
+        run: |
+          echo "::set-output name=eks_name::$(terraform output aws_eks_cluster_eks_name | tr -d '"')"
   kubernetes:
     name: kubernetes
     needs: terraform
@@ -66,6 +69,6 @@ jobs:
       - name: apply
         working-directory: kubernetes
         run: |
-          aws eks --region us-west-1 update-kubeconfig --name ${{ needs.apply.outputs.eks_name }}
+          aws eks --region us-west-1 update-kubeconfig --name ${{ needs.output.outputs.eks_name }}
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -R -f kubernetes
