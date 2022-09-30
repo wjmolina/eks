@@ -112,6 +112,6 @@ resource "aws_eks_node_group" "eks" {
 
 resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
-    command = "aws eks --region us-west-1 update-kubeconfig --name " + aws_eks_cluster.eks.name
+    command = "aws eks --region us-west-1 update-kubeconfig --name ${aws_eks_cluster.eks.name}"
   }
 }
