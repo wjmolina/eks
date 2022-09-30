@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-1
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: terraform setup
         uses: hashicorp/setup-terraform@v2
@@ -37,7 +37,4 @@ jobs:
         run: |
           aws eks --region us-west-1 update-kubeconfig --name eks
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
-          kubectl apply -n example-app -f secrets/secret.yml
-          kubectl apply -n example-app -f configmaps/configmap.yml
-          kubectl apply -n example-app -f deployments/deployment.yml
-          kubectl apply -n example-app -f services/service.yml
+          for file in $(find . -name '*.yml' -or -name '*.yaml'); do kubectl apply -n example-app -f $file; done

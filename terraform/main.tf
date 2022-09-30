@@ -8,13 +8,9 @@ terraform {
 
   backend "s3" {
     bucket = "wmolina"
-    region = "us-west-1"
+    region = var.region
     key    = "eks"
   }
-}
-
-provider "aws" {
-  region = "us-west-1"
 }
 
 resource "aws_iam_role" "eks" {
