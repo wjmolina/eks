@@ -69,6 +69,6 @@ jobs:
       - name: apply
         working-directory: kubernetes
         run: |
-          aws eks --region us-west-1 update-kubeconfig --name ${{ needs.output.outputs.aws_eks_cluster_eks_name }}
+          aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.aws_eks_cluster_eks_name }}
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -R -f kubernetes
