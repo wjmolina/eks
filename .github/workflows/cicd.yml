@@ -22,21 +22,15 @@ jobs:
 
       - name: terraform setup
         uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
+
+      - name: kubectl setup
+        uses: tale/kubectl-action@v1
 
       - name: terraform run
         working-directory: terraform
         run: |
           terraform init
           terraform apply -auto-approve
-
-      - name: kubectl setup
-        uses: tale/kubectl-action@v1
-
-      - name: kubectl run
-        working-directory: kubernetes
-        run: |
           aws eks --region us-west-1 update-kubeconfig --name $(terraform output aws_eks_cluster_eks_name)
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
-          for file in $(find . -name '*.yml' -or -name '*.yaml'); do kubectl apply -n example-app -f $file; done
+          for file in $(find ../kubernetes -name '*.yml' -or -name '*.yaml'); do kubectl apply -n example-app -f $file; done
