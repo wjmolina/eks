@@ -109,3 +109,10 @@ resource "aws_eks_node_group" "eks" {
     desired_size = 1
   }
 }
+
+resource "null_resource" "kubeconfig" {
+  depends_on = ""
+  provisioner "local-exec" {
+    command = "aws eks --region us-west-1 update-kubeconfig --name " + aws_eks_cluster.eks.name
+  }
+}
