@@ -28,7 +28,7 @@ jobs:
     needs: docker
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.output.outputs.eks_name }}
+      eks_name: ${{ steps.output.outputs.eks_name }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
