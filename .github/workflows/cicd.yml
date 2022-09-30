@@ -22,8 +22,6 @@ jobs:
 
       - name: terraform setup
         uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
 
       - name: kubectl setup
         uses: tale/kubectl-action@v1
