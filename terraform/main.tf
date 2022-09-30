@@ -101,7 +101,7 @@ resource "aws_eks_node_group" "eks" {
   instance_types = ["t2.small"]
   scaling_config {
     min_size     = 1
-    max_size     = 2
+    max_size     = 1
     desired_size = 1
   }
 }
