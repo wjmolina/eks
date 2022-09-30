@@ -35,6 +35,7 @@ jobs:
       - name: kubectl run
         working-directory: kubernetes
         run: |
+          aws eks --region us-west-1 update-kubeconfig --name eks
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -n example-app -f secrets/secret.yml
           kubectl apply -n example-app -f configmaps/configmap.yml
