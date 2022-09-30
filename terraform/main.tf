@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket = "wmolina"
-    region = var.region
+    region = "us-west-1"
     key    = "eks"
   }
 }
