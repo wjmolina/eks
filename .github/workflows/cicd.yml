@@ -30,8 +30,8 @@ jobs:
 
       - name: execute commands
         run: |
-          terraform -chdir=./terraform init
-          terraform -chdir=./terraform apply -auto-approve
+          terraform -chdir="./terraform" init
+          terraform -chdir="./terraform" apply -auto-approve
           aws eks --region us-west-1 update-kubeconfig --name $(terraform output aws_eks_cluster_eks_name | tr -d '"')
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
           for file in $(find ./kubernetes -name '*.yml' -or -name '*.yaml'); do kubectl apply -n example-app -f $file; done
