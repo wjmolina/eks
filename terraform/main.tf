@@ -7,9 +7,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = local.backend_bucket
-    key    = local.backend_key
-    region = local.backend_region
+    bucket = "wmolina"
+    key    = "eks"
+    region = "us-west-1"
   }
 }
 
