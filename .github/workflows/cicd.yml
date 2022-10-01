@@ -22,7 +22,7 @@ jobs:
         with:
           context: app
           push: true
-          tags: wjmolina/tmp:${{ github.ref_name }},wjmolina/tmp:latest
+          tags: wjmolina/tmp:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
   terraform:
