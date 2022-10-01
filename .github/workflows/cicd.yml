@@ -72,12 +72,10 @@ jobs:
       - name: setup
         uses: tale/kubectl-action@v1
       - name: jinja
-        uses: cuchi/jinja2-action@v1.2.0
+        uses: jayamanikharyono/jinja-action@v0.1
         with:
-          template: kubernetes/deployments/deployment.yml
-          output_file: kubernetes/deployments/deployment.yml
-        env:
-          IMAGE_TAG: ${{ github.ref_name }}
+          data: IMAGE_TAG=${{ github.ref_name }}
+          path: kubernetes/**/*.yml
       - name: apply
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
