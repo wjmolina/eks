@@ -48,7 +48,7 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
-          echo "::set-output name=eks_name::$(terraform output aws_eks_cluster_eks_name | tr -d '"')"
+          echo ::set-output name=eks_name::$(terraform output aws_eks_cluster_eks_name | tr -d '"')
   kubernetes:
     name: kubernetes
     needs: terraform
@@ -69,4 +69,4 @@ jobs:
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
-          kubectl apply -R -f kubernetes
+          kubectl apply -R -f .
