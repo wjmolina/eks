@@ -43,11 +43,12 @@ jobs:
         with:
           terraform_wrapper: false
       - id: apply
+        name: apply
         working-directory: terraform
         run: |
           terraform init
           terraform apply -auto-approve
-          echo "::set-output name=eks_name::$(terraform output eks_name | tr -d '"')"
+          echo "::set-output name=eks_name::$(terraform output aws_eks_cluster_eks_name | tr -d '"')"
   kubernetes:
     name: kubernetes
     needs: terraform
