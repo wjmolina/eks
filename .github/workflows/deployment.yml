@@ -17,7 +17,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: wjmolina/tmp:${{ github.ref_name }}
+          tags: wjmolina/tmp:${{ github.ref_name }},wjmolina/tmp:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
   terraform:
     name: terraform
     needs: docker
