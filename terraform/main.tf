@@ -105,3 +105,12 @@ resource "aws_eks_node_group" "eks" {
     desired_size = 1
   }
 }
+
+resource "aws_dynamodb_table" "eks" {
+  name     = "Milestones"
+  hash_key = "MilestoneId"
+  attribute {
+    name = "MilestoneId"
+    type = "S"
+  }
+}
