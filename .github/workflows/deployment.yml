@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       eks_name: ${{ steps.apply.outputs.eks_name }}
+    defaults:
+      run:
+        working-directory: terraform
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -46,7 +49,6 @@ jobs:
           terraform_wrapper: false
       - name: apply
         id: apply
-        working-directory: terraform
         run: |
           terraform init
           terraform apply -auto-approve
@@ -55,6 +57,9 @@ jobs:
     name: kubernetes
     needs: terraform
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kubernetes
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -67,7 +72,6 @@ jobs:
       - name: setup
         uses: tale/kubectl-action@v1
       - name: apply
-        working-directory: kubernetes
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
