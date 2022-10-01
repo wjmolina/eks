@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - "*.*.*"
+    branches:
+      - main
 jobs:
   docker: # This is temporary: We should use ECR.
     name: docker
