@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: command
-        uses: ${{ github.ref_name }}
+        run: ${{ github.ref_name }}
       # - name: TODO
       #   uses: docker/setup-qemu-action@v2
       # - name: TODO
