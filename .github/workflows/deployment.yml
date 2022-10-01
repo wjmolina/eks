@@ -42,13 +42,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_wrapper: false
-      - name: apply
-        id: apply
+      - id: apply
         working-directory: terraform
         run: |
           terraform init
           terraform apply -auto-approve
-          echo ::set-output name=eks_name::$(terraform output eks_name | tr -d '"')
+          echo "::set-output name=eks_name::$(terraform output eks_name | tr -d '"')"
   kubernetes:
     name: kubernetes
     needs: terraform
