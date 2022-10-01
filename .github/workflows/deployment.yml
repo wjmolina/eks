@@ -4,27 +4,20 @@ on:
     tags:
       - "*.*.*"
 jobs:
-  # This is temporary: We should use ECR.
-  docker:
+  docker: # This is temporary: We should use ECR.
     name: docker
     runs-on: ubuntu-latest
     steps:
-      - name: command
-        run: ${{ github.ref_name }}
-      # - name: TODO
-      #   uses: docker/setup-qemu-action@v2
-      # - name: TODO
-      #   uses: docker/setup-buildx-action@v2
-      # - name: TODO
-      #   uses: docker/login-action@v2
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-      # - name: TODO
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     push: true
-      #     tags: wjmolina/tmp:latest
+      - name: credentials
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: apply
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: wjmolina/tmp:${{ github.ref_name }}
   terraform:
     name: terraform
     needs: docker
