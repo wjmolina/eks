@@ -49,8 +49,7 @@ jobs:
           terraform apply -auto-approve
       - name: output
         working-directory: terraform
-        run: |
-          echo ::set-output name=aws_eks_cluster_eks_name::eks
+        run: echo "::set-output name=aws_eks_cluster_eks_name::eks"
   kubernetes:
     name: kubernetes
     needs: terraform
