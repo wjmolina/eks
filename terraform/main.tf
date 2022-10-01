@@ -107,8 +107,9 @@ resource "aws_eks_node_group" "eks" {
 }
 
 resource "aws_dynamodb_table" "eks" {
-  name     = "Milestones"
-  hash_key = "MilestoneId"
+  name         = "Milestones"
+  hash_key     = "MilestoneId"
+  billing_mode = "PAY_PER_REQUEST"
   attribute {
     name = "MilestoneId"
     type = "S"
