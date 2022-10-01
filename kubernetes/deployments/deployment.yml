@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: example-app
-          image: wjmolina/tmp:{{ env['IMAGE_TAG'] }}
+          image: wjmolina/tmp:{{ IMAGE_TAG }}
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
