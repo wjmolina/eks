@@ -71,9 +71,15 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: setup
         uses: tale/kubectl-action@v1
+      - name: jinja
+        uses: cuchi/jinja2-action@v1.2.0
+        with:
+          template: deployments/deployment.yml
+          output_file: deployments/deployment.yml
+        env:
+          IMAGE_TAG: ${{ github.ref_name }}
       - name: apply
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
-          kubectl create configmap image-tag --from-literal=IMAGE_TAG=${{ github.ref_name }}
           kubectl apply -R -f .
