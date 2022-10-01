@@ -4,8 +4,8 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello_geek():
-    return "<h1>Hello from Flask & Docker</h2>"
+def index():
+    return "Hello, World!"
 
 
 if __name__ == "__main__":
