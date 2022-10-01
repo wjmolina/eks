@@ -1,4 +1,4 @@
-name: deployment
+name: cicd
 on:
   push:
     tags:
@@ -75,4 +75,5 @@ jobs:
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
           kubectl create namespace example-app --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create configmap image-tag --from-literal=IMAGE_TAG=${{ github.ref_name }}
           kubectl apply -R -f .

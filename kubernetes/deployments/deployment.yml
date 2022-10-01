@@ -26,7 +26,13 @@ spec:
     spec:
       containers:
         - name: example-app
-          image: wjmolina/tmp:latest
+          env:
+            - name: IMAGE_TAG
+              valueFrom:
+                configMapKeyRef:
+                  name: image-tag
+                  key: IMAGE_TAG
+          image: wjmolina/tmp:$(IMAGE_TAG)
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
