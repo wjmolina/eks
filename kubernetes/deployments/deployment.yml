@@ -28,8 +28,6 @@ spec:
         - name: example-app
           image: wjmolina/tmp:{{ IMAGE_TAG }}
           imagePullPolicy: Always
-          ports:
-            - containerPort: 5000
           resources:
             requests:
               memory: "64Mi"

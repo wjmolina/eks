@@ -1,17 +1,16 @@
-from flask import Flask
+from discord import Intents
+from discord.ext import commands
 
-app = Flask(__name__)
+TOKEN = "ODU2NTg0NTE0NTg2NTQyMDkw.GNhESR.ThmjfDeOMWwoDRR8SW48vRUaJcQlGACRPJB_YQ" # This is temporary.
 
-
-@app.route("/")
-def index():
-    return "<h1>Hello, World!</h1>"
-
-
-@app.route("/secret")
-def secret():
-    return "You found a secret place!"
+intents = Intents.default()
+intents.message_content = True
+bot = commands.Bot("!", intents=intents)
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@bot.command()
+async def foo(context, *arguments):
+    await context.send(arguments)
+
+
+bot.run(TOKEN)
