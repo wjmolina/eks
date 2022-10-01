@@ -2,7 +2,7 @@ name: deployment
 on:
   push:
     tags:
-      - *.*.*
+      - "*.*.*"
 jobs:
   # This is temporary: We should use ECR.
   docker:
