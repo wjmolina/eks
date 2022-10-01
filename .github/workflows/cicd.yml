@@ -74,8 +74,8 @@ jobs:
       - name: jinja
         uses: cuchi/jinja2-action@v1.2.0
         with:
-          template: deployments/deployment.yml
-          output_file: deployments/deployment.yml
+          template: kubernetes/deployments/deployment.yml
+          output_file: kubernetes/deployments/deployment.yml
         env:
           IMAGE_TAG: ${{ github.ref_name }}
       - name: apply
