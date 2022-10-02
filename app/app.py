@@ -24,7 +24,7 @@ async def ping(ctx, *args):
 
 @bot.command()
 async def create_milestone(ctx, *args):
-    datetime.strptime(args[0], "%Y-%M-%d")
+    datetime.strptime(args[0], "%Y-%m-%d")
 
     milestones_table.put_item(
         TableName="Milestones",
