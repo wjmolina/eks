@@ -2,6 +2,7 @@ import os
 import uuid
 from bisect import insort
 from collections import defaultdict
+from datetime import datetime
 
 import boto3
 from discord import Intents
@@ -13,7 +14,7 @@ intents.members = True
 bot = commands.Bot("!", intents=intents)
 
 milestones_table = boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones")
-milestones_channel = 1025250447847587870
+milestones_channel_id = 1025250447847587870
 
 
 @bot.command()
@@ -23,6 +24,8 @@ async def ping(ctx, *args):
 
 @bot.command()
 async def create_milestone(ctx, *args):
+    datetime.strptime(args[0], "%Y-%M-%d")
+
     milestones_table.put_item(
         TableName="Milestones",
         Item={
@@ -32,8 +35,6 @@ async def create_milestone(ctx, *args):
             "AuthorId": ctx.author.id,
         },
     )
-
-    await ctx.send("success")
 
     data = defaultdict(list)
 
@@ -51,7 +52,8 @@ async def create_milestone(ctx, *args):
 
         milestones_message += "```\n"
 
-    await bot.get_channel(milestones_channel).send(milestones_message)
+    await bot.get_channel(milestones_channel_id).send(milestones_message)
+    await ctx.send("success")
 
 
 bot.run(os.environ["BOT_TOKEN"])

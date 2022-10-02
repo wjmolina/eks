@@ -4,7 +4,7 @@ on:
     tags:
       - "*.*.*"
 jobs:
-  docker: # This is temporary: We should use ECR.
+  docker:
     name: docker
     runs-on: ubuntu-latest
     steps:
