@@ -27,6 +27,12 @@ spec:
       containers:
         - name: example-app
           image: wjmolina/tmp:{{ IMAGE_TAG }}
+          env:
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bot
+                  key: token
           imagePullPolicy: Always
           resources:
             requests:

@@ -74,7 +74,7 @@ jobs:
       - name: jinja
         uses: jayamanikharyono/jinja-action@v0.1
         with:
-          data: IMAGE_TAG=${{ github.ref_name }}
+          data: IMAGE_TAG=${{ github.ref_name }} -D BOT_TOKEN=${{ secrets.BOT_TOKEN }}
           path: kubernetes/**/*.yml
       - name: apply
         run: |
