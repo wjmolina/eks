@@ -30,7 +30,7 @@ def create_milestones_message():
         milestones_message += "```\n"
 
         for date, text in milestones:
-            milestones_message += f"{datetime.strptime(date, '%Y-%m-%d').strftime('%B %-d, %Y')}: {text}\n"
+            milestones_message += f"{datetime.strptime(date, '%Y-%m-%d').strftime('%b %d, %Y')}: {text}\n"
 
         milestones_message += "```\n"
 
