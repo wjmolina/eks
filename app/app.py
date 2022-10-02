@@ -2,7 +2,7 @@ import os
 import uuid
 from bisect import insort
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import boto3
 from discord import Intents
@@ -30,7 +30,9 @@ def create_milestones_content():
         milestones_message += "```\n"
 
         for date, text in milestones:
-            milestones_message += f"{datetime.strptime(date, '%Y-%m-%d').strftime('%b %d, %Y')}: {text}\n"
+            date = datetime.strptime(date, "%Y-%m-%d")
+            if (datetime.now() - date) < timedelta(days=7):
+                milestones_message += f"{date.strftime('%b %d, %Y')}: {text}\n"
 
         milestones_message += "```\n"
 
