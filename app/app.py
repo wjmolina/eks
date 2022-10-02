@@ -42,7 +42,7 @@ async def create_milestone(ctx, *args):
     milestones_message = ""
 
     for author_id, milestones in data.items():
-        milestones_message += ctx.message.server.get_member(author_id).mention + "\n"
+        milestones_message += bot.get_user(author_id).mention + "\n"
         milestones_message += "```\n"
 
         for date, text in milestones:
