@@ -17,6 +17,45 @@ milestones_table = boto3.resource("dynamodb", region_name="us-west-1").Table("Mi
 milestones_channel_id = 1025250447847587870
 
 
+def create_milestones_message():
+    data = defaultdict(list)
+
+    for item in milestones_table.scan()["Items"]:
+        insort(data[item["AuthorId"]], [item["Date"], item["Text"]])
+
+    milestones_message = ""
+
+    for author_id, milestones in data.items():
+        milestones_message += bot.get_user(author_id).mention + "\n"
+        milestones_message += "```\n"
+
+        for date, text in milestones:
+            milestones_message += f"{date}: {text}\n"
+
+        milestones_message += "```\n"
+
+    return milestones_message
+
+
+async def create_or_get_channel_singleton(channel_id):
+    channel = bot.get_channel(channel_id)
+    has_skipped_one = False
+    single_message = None
+
+    async for message in channel.history():
+        if not has_skipped_one:
+            single_message = message
+            has_skipped_one = True
+            continue
+
+        message.delete()
+
+    if not single_message:
+        single_message = await channel.send("")
+
+    return single_message
+
+
 @bot.command()
 async def ping(ctx, *args):
     await ctx.send("pong")
@@ -36,23 +75,10 @@ async def create_milestone(ctx, *args):
         },
     )
 
-    data = defaultdict(list)
+    message = create_milestones_message()
+    singleton = create_or_get_channel_singleton(milestones_channel_id)
+    singleton.edit(content=message)
 
-    for item in milestones_table.scan()["Items"]:
-        insort(data[item["AuthorId"]], [item["Date"], item["Text"]])
-
-    milestones_message = ""
-
-    for author_id, milestones in data.items():
-        milestones_message += bot.get_user(author_id).mention + "\n"
-        milestones_message += "```\n"
-
-        for date, text in milestones:
-            milestones_message += f"{date}: {text}\n"
-
-        milestones_message += "```\n"
-
-    await bot.get_channel(milestones_channel_id).send(milestones_message)
     await ctx.send("success")
 
 
