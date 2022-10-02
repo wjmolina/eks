@@ -9,6 +9,7 @@ from discord.ext import commands
 
 intents = Intents.default()
 intents.message_content = True
+intents.members = True
 bot = commands.Bot("!", intents=intents)
 
 milestones_table = boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones")
