@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import boto3
 from discord import Intents
@@ -18,12 +19,15 @@ async def ping(context, *args):
 async def create_milestone(context, *args):
     table = boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones")
 
-    table.put_item(TableName="Milestones", Item={
-        "MilestoneId": str(uuid.uuid4()),
-        "Date": args[0],
-        "Text": " ".join(args[1:]),
-        "AuthorId": context.author.id,
-    })
+    table.put_item(
+        TableName="Milestones",
+        Item={
+            "MilestoneId": str(uuid.uuid4()),
+            "Date": args[0],
+            "Text": " ".join(args[1:]),
+            "AuthorId": context.author.id,
+        },
+    )
 
     await context.send("success")
 
