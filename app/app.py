@@ -1,5 +1,6 @@
 import os
 
+import boto3
 from discord import Intents
 from discord.ext import commands
 
@@ -9,8 +10,22 @@ bot = commands.Bot("!", intents=intents)
 
 
 @bot.command()
-async def foo(context, *arguments):
-    await context.send(arguments)
+async def ping(context, *args):
+    await context.send("pong")
+
+
+@bot.command()
+async def create_milestone(context, *args):
+    table = boto3.resource("dynamodb").Table("Milestones")
+
+    table.put_item(TableName="Milestones", Item={
+        "MilestoneId": str(uuid.uuid4()),
+        "Date": args[0],
+        "Text": " ".join(args[1:]),
+        "AuthorId": context.author.id,
+    })
+
+    await context.send("success")
 
 
 bot.run(os.environ["BOT_TOKEN"])
