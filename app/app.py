@@ -63,8 +63,8 @@ async def ping(ctx, *args):
 
 @bot.command()
 async def create_milestone(ctx, *args):
+    singleton = await create_or_get_channel_singleton(milestones_channel_id)
     datetime.strptime(args[0], "%Y-%m-%d")
-
     milestones_table.put_item(
         TableName="Milestones",
         Item={
@@ -74,11 +74,8 @@ async def create_milestone(ctx, *args):
             "AuthorId": ctx.author.id,
         },
     )
-
     message = create_milestones_message()
-    singleton = await create_or_get_channel_singleton(milestones_channel_id)
-    singleton.edit(content=message)
-
+    await singleton.edit(content=message)
     await ctx.send("success")
 
 
