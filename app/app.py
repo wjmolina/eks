@@ -17,9 +17,7 @@ async def ping(context, *args):
 
 @bot.command()
 async def create_milestone(context, *args):
-    table = boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones")
-
-    table.put_item(
+    boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones").put_item(
         TableName="Milestones",
         Item={
             "MilestoneId": str(uuid.uuid4()),

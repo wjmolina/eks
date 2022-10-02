@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: wjmolina/tmp:{{ IMAGE_TAG }}
+          image: wjmolina/bot:{{ IMAGE_TAG }}
           env:
             - name: BOT_TOKEN
               valueFrom:
