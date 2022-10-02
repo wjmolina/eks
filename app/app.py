@@ -51,7 +51,7 @@ async def create_or_get_channel_singleton(channel_id):
         message.delete()
 
     if not single_message:
-        single_message = await channel.send("")
+        single_message = await channel.send("placeholder")
 
     return single_message
 
