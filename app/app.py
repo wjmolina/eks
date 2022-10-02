@@ -76,7 +76,7 @@ async def create_milestone(ctx, *args):
     )
 
     message = create_milestones_message()
-    singleton = create_or_get_channel_singleton(milestones_channel_id)
+    singleton = await create_or_get_channel_singleton(milestones_channel_id)
     singleton.edit(content=message)
 
     await ctx.send("success")
