@@ -78,6 +78,10 @@ data "aws_iam_policy" "AmazonEC2ContainerRegistryReadOnly" {
   arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+data "aws_iam_policy" "AmazonDynamoDBFullAccess" {
+  arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+}
+
 resource "aws_iam_role_policy_attachment" "eks_AmazonEKSWorkerNodePolicy" {
   role       = aws_iam_role.ec2.name
   policy_arn = data.aws_iam_policy.AmazonEKSWorkerNodePolicy.arn
@@ -91,6 +95,11 @@ resource "aws_iam_role_policy_attachment" "eks_AmazonEKS_CNI_Policy" {
 resource "aws_iam_role_policy_attachment" "eks_AmazonEC2ContainerRegistryReadOnly" {
   role       = aws_iam_role.ec2.name
   policy_arn = data.aws_iam_policy.AmazonEC2ContainerRegistryReadOnly.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eks_AmazonDynamoDBFullAccess" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = data.aws_iam_policy.AmazonDynamoDBFullAccess.arn
 }
 
 resource "aws_eks_node_group" "eks" {
