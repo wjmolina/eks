@@ -17,7 +17,7 @@ milestones_table = boto3.resource("dynamodb", region_name="us-west-1").Table("Mi
 milestones_channel_id = 1025250447847587870
 
 
-def create_milestones_message():
+def create_milestones_content():
     data = defaultdict(list)
 
     for item in milestones_table.scan()["Items"]:
@@ -37,23 +37,23 @@ def create_milestones_message():
     return milestones_message
 
 
-async def create_or_get_channel_singleton(channel_id):
-    channel = bot.get_channel(channel_id)
+async def create_or_read_channel_singleton(id):
+    channel = bot.get_channel(id)
     has_skipped_one = False
-    single_message = None
+    singleton = None
 
     async for message in channel.history():
         if not has_skipped_one:
-            single_message = message
+            singleton = message
             has_skipped_one = True
             continue
 
         message.delete()
 
-    if not single_message:
-        single_message = await channel.send("placeholder")
+    if not singleton:
+        singleton = await channel.send("placeholder")
 
-    return single_message
+    return singleton
 
 
 @bot.command()
@@ -63,7 +63,7 @@ async def ping(ctx, *args):
 
 @bot.command()
 async def create_milestone(ctx, *args):
-    singleton = await create_or_get_channel_singleton(milestones_channel_id)
+    singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(args[0], "%Y-%m-%d")
     milestones_table.put_item(
         TableName="Milestones",
@@ -74,8 +74,8 @@ async def create_milestone(ctx, *args):
             "AuthorId": ctx.author.id,
         },
     )
-    message = create_milestones_message()
-    await singleton.edit(content=message)
+    content = create_milestones_content()
+    await singleton.edit(content=content)
     await ctx.send("success")
 
 
