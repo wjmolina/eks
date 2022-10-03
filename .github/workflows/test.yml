@@ -1,0 +1,13 @@
+name: test
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: command
+        run: |
+          sudo apt-get install -y jinja2
+          jinja2 --version
