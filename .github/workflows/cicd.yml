@@ -65,6 +65,7 @@ jobs:
           REPOSITORY: cat ../terraform-artifact | grep ECR_NAME | grep -o '[^=]*$'
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
-          ls -la ..
+          cat ../terraform-artifact
+          cat ../terraform-artifact | grep ECR_NAME | grep -o '[^=]*$'
           docker build -t $REGISTRY/$($REPOSITORY):$IMAGE_TAG .
           docker push $REGISTRY/$($REPOSITORY):$IMAGE_TAG
