@@ -32,8 +32,8 @@ jobs:
 
       - id: terraform-output
         run: |
-          echo ::set-output name=eks_name::$(terraform output eks_name | tr -d '"')
-          echo ::set-output name=ecr_name::$(terraform output ecr_name | tr -d '"')
+          echo ::set-output name=eks_name::`terraform output eks_name | tr -d '"'`
+          echo ::set-output name=ecr_name::`terraform output ecr_name | tr -d '"'`
 
   docker:
     runs-on: ubuntu-latest
