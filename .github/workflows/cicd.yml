@@ -93,10 +93,11 @@ jobs:
       - name: jinja
         uses: jayamanikharyono/jinja-action@v0.1
         with:
-          data: IMAGE_TAG=${{ github.ref_name }} -D BOT_TOKEN=${{ secrets.BOT_TOKEN }}
+          datafile: kubernetes/config.json
           path: kubernetes/**/*.yml
 
       - name: apply
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
+          kubectl create namespace bot --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -R -f .
