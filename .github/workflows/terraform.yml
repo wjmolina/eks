@@ -1,8 +1,5 @@
 name: cicd
-on:
-  push:
-    branches:
-      - main
+on: push
 jobs:
   terraform:
     name: terraform
