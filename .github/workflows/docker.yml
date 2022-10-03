@@ -33,7 +33,7 @@ jobs:
       - name: download artifact
         uses: actions/download-artifact@v3
         with:
-          name: terraform-artifact
+          name: terraform/terraform-artifact
 
       - name: push
         env:
