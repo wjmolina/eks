@@ -14,7 +14,7 @@ terraform {
 
 resource "aws_iam_role" "eks" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -37,7 +37,7 @@ resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
 
 resource "aws_cloudformation_stack" "eks" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   name         = "eks"
   template_url = "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-sample.yaml"
@@ -45,7 +45,7 @@ resource "aws_cloudformation_stack" "eks" {
 
 resource "aws_eks_cluster" "eks" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   name     = "eks"
   role_arn = aws_iam_role.eks.arn
@@ -57,7 +57,7 @@ resource "aws_eks_cluster" "eks" {
 
 resource "aws_iam_role" "ec2" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -95,7 +95,7 @@ resource "aws_iam_role_policy_attachment" "ec2_AmazonDynamoDBFullAccess" {
 
 resource "aws_eks_node_group" "eks" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   cluster_name   = aws_eks_cluster.eks.name
   node_role_arn  = aws_iam_role.ec2.arn
@@ -111,7 +111,7 @@ resource "aws_eks_node_group" "eks" {
 
 resource "aws_dynamodb_table" "eks" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   name         = "Milestones"
   hash_key     = "MilestoneId"
@@ -124,7 +124,7 @@ resource "aws_dynamodb_table" "eks" {
 
 resource "aws_ecr_repository" "eks" {
   tags = {
-    "owner" = "wmolina"
+    "Owner" = "wmolina"
   }
   name                 = "eks"
   image_tag_mutability = "IMMUTABLE"
