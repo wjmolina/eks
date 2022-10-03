@@ -65,5 +65,6 @@ jobs:
           REPOSITORY: unzip -p terraform-artifact.zip | grep ECR_NAME | grep -o '[^=]*$'
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
+          ls -la
           docker build -t $REGISTRY/$($REPOSITORY):$IMAGE_TAG .
           docker push $REGISTRY/$($REPOSITORY):$IMAGE_TAG
