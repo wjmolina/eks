@@ -12,4 +12,14 @@ jobs:
           python-version: "3.10"
       - run: |
           pip install jinja2-cli
-          jinja2 --version
+          dir=`ls kubernetes/**/*.yml`
+          for eachfile in $dir;
+          do
+            jinja2 --strict \
+              -D BOT_TOKEN=${{ secrets.BOT_TOKEN }} \
+              -D REGISTRY=${{ steps.ecr-login.outputs.registry }} \
+              -D REPOSITORY=${{ needs.terraform.outputs.eks_name }} \
+              -D IMAGE_TAG=${{ github.ref_name }} \
+            $eachfile > $eachfile
+          done
+          cat $eachfile
