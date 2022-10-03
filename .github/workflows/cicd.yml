@@ -83,10 +83,23 @@ jobs:
       - id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
 
-      - uses: jayamanikharyono/jinja-action@v0.1
+      - uses: actions/setup-python@v4
         with:
-          data: BOT_TOKEN=${{ secrets.BOT_TOKEN }} -D REGISTRY=${{ steps.ecr-login.outputs.registry }} -D REPOSITORY=${{ needs.terraform.outputs.eks_name }} -D IMAGE_TAG=${{ github.ref_name }}
-          path: kubernetes/**/*.yml
+          python-version: "3.10"
+
+      - run: |
+          pip install jinja2-cli
+          dir=`ls **/*.yml`
+          for eachfile in $dir;
+          do
+            jinja2 --strict \
+              -D BOT_TOKEN=${{ secrets.BOT_TOKEN }} \
+              -D REGISTRY=${{ steps.ecr-login.outputs.registry }} \
+              -D REPOSITORY=${{ needs.terraform.outputs.eks_name }} \
+              -D IMAGE_TAG=${{ github.ref_name }} \
+            $eachfile > $eachfile
+            cat $eachfile
+          done
 
       - name: kubectl
         run: |
