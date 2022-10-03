@@ -62,9 +62,10 @@ jobs:
       - name: push
         env:
           REGISTRY: ${{ steps.login.outputs.registry }}
-          REPOSITORY: unzip -p terraform-artifact.zip | grep ECR_NAME | grep -o '[^=]*$'
+          REPOSITORY: unzip -p /home/runner/work/eks/eks/terraform-artifact.zip | grep ECR_NAME | grep -o '[^=]*$'
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
+          pwd
           ls -la
           docker build -t $REGISTRY/$($REPOSITORY):$IMAGE_TAG .
           docker push $REGISTRY/$($REPOSITORY):$IMAGE_TAG
