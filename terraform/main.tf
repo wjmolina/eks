@@ -124,3 +124,12 @@ resource "aws_dynamodb_table" "eks" {
     type = "S"
   }
 }
+
+resource "aws_ecr_repository" "eks" {
+  name                 = "eks"
+  image_tag_mutability = "IMMUTABLE"
+  force_delete         = true
+  image_scanning_configuration {
+    scan_on_push = false
+  }
+}
