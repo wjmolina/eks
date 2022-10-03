@@ -24,5 +24,5 @@ jobs:
               -D REPOSITORY=${{ needs.terraform.outputs.eks_name }} \
               -D IMAGE_TAG=${{ github.ref_name }} \
             $eachfile > $eachfile
+            cat $eachfile
           done
-          cat $eachfile
