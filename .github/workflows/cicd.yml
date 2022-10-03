@@ -97,8 +97,12 @@ jobs:
               -D REGISTRY=${{ steps.ecr-login.outputs.registry }} \
               -D REPOSITORY=${{ needs.terraform.outputs.eks_name }} \
               -D IMAGE_TAG=${{ github.ref_name }} \
-            $eachfile > $eachfile
-            cat $eachfile
+            $eachfile > "${eachfile}_"
+          done
+          for eachfile in $dir;
+          do
+            rm ${eachfile}
+            mv "${eachfile}_" ${eachfile}
           done
 
       - name: kubectl
