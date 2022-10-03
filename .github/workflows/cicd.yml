@@ -62,8 +62,8 @@ jobs:
       - name: push
         env:
           REGISTRY: ${{ steps.login.outputs.registry }}
-          REPOSITORY: $(cat terraform-artifact | grep ECR_NAME | grep -o '[^=]*$')
+          REPOSITORY: cat terraform-artifact | grep ECR_NAME | grep -o '[^=]*$'
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker build -t $REGISTRY/$($REPOSITORY):$IMAGE_TAG .
+          docker push $REGISTRY/$($REPOSITORY):$IMAGE_TAG
