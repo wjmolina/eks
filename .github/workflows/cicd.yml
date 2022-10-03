@@ -87,7 +87,8 @@ jobs:
         with:
           python-version: "3.10"
 
-      - run: |
+      - name: jinja
+        run: |
           pip install jinja2-cli
           dir=`ls **/*.yml`
           for eachfile in $dir;
