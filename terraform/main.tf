@@ -5,7 +5,6 @@ terraform {
       version = "~> 4.0"
     }
   }
-
   backend "s3" {
     bucket = "wmolina"
     key    = "eks"
@@ -14,6 +13,7 @@ terraform {
 }
 
 resource "aws_iam_role" "eks" {
+  label = "wmolina"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -28,21 +28,20 @@ resource "aws_iam_role" "eks" {
   })
 }
 
-data "aws_iam_policy" "AmazonEKSClusterPolicy" {
-  arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-}
-
 resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
+  label      = "wmolina"
   role       = aws_iam_role.eks.name
-  policy_arn = data.aws_iam_policy.AmazonEKSClusterPolicy.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
 resource "aws_cloudformation_stack" "eks" {
+  label        = "wmolina"
   name         = "eks"
   template_url = "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-sample.yaml"
 }
 
 resource "aws_eks_cluster" "eks" {
+  label    = "wmolina"
   name     = "eks"
   role_arn = aws_iam_role.eks.arn
   vpc_config {
@@ -52,6 +51,7 @@ resource "aws_eks_cluster" "eks" {
 }
 
 resource "aws_iam_role" "ec2" {
+  label = "wmolina"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -66,43 +66,32 @@ resource "aws_iam_role" "ec2" {
   })
 }
 
-data "aws_iam_policy" "AmazonEKSWorkerNodePolicy" {
-  arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-}
-
-data "aws_iam_policy" "AmazonEKS_CNI_Policy" {
-  arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-}
-
-data "aws_iam_policy" "AmazonEC2ContainerRegistryReadOnly" {
-  arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
-
-data "aws_iam_policy" "AmazonDynamoDBFullAccess" {
-  arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "eks_AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "ec2_AmazonEKSWorkerNodePolicy" {
+  label      = "wmolina"
   role       = aws_iam_role.ec2.name
-  policy_arn = data.aws_iam_policy.AmazonEKSWorkerNodePolicy.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "eks_AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "ec2_AmazonEKS_CNI_Policy" {
+  label      = "wmolina"
   role       = aws_iam_role.ec2.name
-  policy_arn = data.aws_iam_policy.AmazonEKS_CNI_Policy.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-resource "aws_iam_role_policy_attachment" "eks_AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "ec2_AmazonEC2ContainerRegistryReadOnly" {
+  label      = "wmolina"
   role       = aws_iam_role.ec2.name
-  policy_arn = data.aws_iam_policy.AmazonEC2ContainerRegistryReadOnly.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_iam_role_policy_attachment" "eks_AmazonDynamoDBFullAccess" {
+resource "aws_iam_role_policy_attachment" "ec2_AmazonDynamoDBFullAccess" {
+  label      = "wmolina"
   role       = aws_iam_role.ec2.name
-  policy_arn = data.aws_iam_policy.AmazonDynamoDBFullAccess.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
 
 resource "aws_eks_node_group" "eks" {
+  label          = "wmolina"
   cluster_name   = aws_eks_cluster.eks.name
   node_role_arn  = aws_iam_role.ec2.arn
   subnet_ids     = [split(",", aws_cloudformation_stack.eks.outputs["SubnetIds"])[0]]
@@ -116,6 +105,7 @@ resource "aws_eks_node_group" "eks" {
 }
 
 resource "aws_dynamodb_table" "eks" {
+  label        = "wmolina"
   name         = "Milestones"
   hash_key     = "MilestoneId"
   billing_mode = "PAY_PER_REQUEST"
@@ -126,6 +116,7 @@ resource "aws_dynamodb_table" "eks" {
 }
 
 resource "aws_ecr_repository" "eks" {
+  label                = "wmolina"
   name                 = "eks"
   image_tag_mutability = "IMMUTABLE"
   force_delete         = true
