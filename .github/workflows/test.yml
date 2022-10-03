@@ -11,6 +11,8 @@ jobs:
         with:
           python-version: "3.10"
       - run: |
+          pwd
+          ls -la
           pip install jinja2-cli
           dir=`ls kubernetes/**/*.yml`
           for eachfile in $dir;
