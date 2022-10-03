@@ -1,6 +1,0 @@
-{
-  "BOT_TOKEN": "${{ secrets.BOT_TOKEN }}",
-  "REGISTRY": "${{ steps.ecr-login.outputs.registry }}",
-  "REPOSITORY": "${{ needs.terraform.outputs.eks_name }}",
-  "IMAGE_TAG": "${{ github.ref_name }}"
-}

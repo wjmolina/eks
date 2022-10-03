@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: kubernetes/manifests
+        working-directory: kubernetes
     steps:
       - uses: actions/checkout@v3
 
@@ -85,8 +85,8 @@ jobs:
 
       - uses: jayamanikharyono/jinja-action@v0.1
         with:
-          datafile: kubernetes/config.json
-          path: kubernetes/manifests/**/*.yml
+          data: BOT_TOKEN=${{ secrets.BOT_TOKEN }} -D REGISTRY=${{ steps.ecr-login.outputs.registry }} -D REPOSITORY=${{ needs.terraform.outputs.eks_name }} -D IMAGE_TAG=${{ github.ref_name }}
+          path: kubernetes/**/*.yml
 
       - name: kubectl
         run: |
