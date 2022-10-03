@@ -1,5 +1,5 @@
 name: cicd
-on: push
+on: push # CHANGE THIS
 jobs:
   terraform:
     name: terraform
@@ -20,3 +20,8 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-artifact
+          path: terraform-artifact
