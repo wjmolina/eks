@@ -31,9 +31,6 @@ resource "aws_iam_role" "eks" {
 }
 
 resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy" {
-  tags = {
-    "owner" = "wmolina"
-  }
   role       = aws_iam_role.eks.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
@@ -77,33 +74,21 @@ resource "aws_iam_role" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_AmazonEKSWorkerNodePolicy" {
-  tags = {
-    "owner" = "wmolina"
-  }
   role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_AmazonEKS_CNI_Policy" {
-  tags = {
-    "owner" = "wmolina"
-  }
   role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_AmazonEC2ContainerRegistryReadOnly" {
-  tags = {
-    "owner" = "wmolina"
-  }
   role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_AmazonDynamoDBFullAccess" {
-  tags = {
-    "owner" = "wmolina"
-  }
   role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
