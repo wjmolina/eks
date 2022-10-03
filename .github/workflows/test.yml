@@ -9,5 +9,5 @@ jobs:
     steps:
       - name: command
         run: |
-          sudo apt-get install -y jinja2
+          sudo apt-get install -y python-jinja2
           jinja2 --version
