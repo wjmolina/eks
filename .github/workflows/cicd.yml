@@ -33,11 +33,13 @@ jobs:
           terraform init
           terraform apply -auto-approve
 
-      - name: set outputs
-        id: set outputs
-        run: |
-          echo ::set-output name=eks_name::$(terraform output eks_name | tr -d '"')
-          echo ::set-output name=ecr_name::$(terraform output ecr_name | tr -d '"')
+      - name: set eks_name
+        id: set eks_name
+        run: echo ::set-output name=eks_name::$(terraform output eks_name | tr -d '"')
+
+      - name: set ecr_name
+        id: set ecr_name
+        run: echo ::set-output name=ecr_name::$(terraform output ecr_name | tr -d '"')
 
   docker:
     runs-on: ubuntu-latest
