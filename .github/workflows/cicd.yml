@@ -7,34 +7,30 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     outputs:
-      eks_name: ${{ steps.set-outputs.outputs.eks_name }}
-      ecr_name: ${{ steps.set-outputs.outputs.ecr_name }}
+      eks_name: ${{ steps.terraform-output.outputs.eks_name }}
+      ecr_name: ${{ steps.terraform-output.outputs.ecr_name }}
     defaults:
       run:
         working-directory: terraform
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: setup
-        uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_wrapper: false
 
-      - name: apply
+      - name: terraform
         run: |
           terraform init
           terraform apply -auto-approve
 
-      - name: set outputs
-        id: set-outputs
+      - id: terraform-output
         run: |
           echo ::set-output name=eks_name::$(terraform output eks_name | tr -d '"')
           echo ::set-output name=ecr_name::$(terraform output ecr_name | tr -d '"')
@@ -46,23 +42,20 @@ jobs:
       run:
         working-directory: app
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: login
-        id: login
+      - id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: push
+      - name: docker
         env:
-          REGISTRY: ${{ steps.login.outputs.registry }}
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           REPOSITORY: ${{ needs.terraform.outputs.eks_name }}
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
@@ -75,28 +68,27 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: kubernetes
+        working-directory: kubernetes/manifests
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: setup
-        uses: tale/kubectl-action@v1
+      - uses: tale/kubectl-action@v1
 
-      - name: jinja
-        uses: jayamanikharyono/jinja-action@v0.1
+      - id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - uses: jayamanikharyono/jinja-action@v0.1
         with:
           datafile: kubernetes/config.json
-          path: kubernetes/**/*.yml
+          path: kubernetes/manifests/**/*.yml
 
-      - name: apply
+      - name: kubectl
         run: |
           aws eks --region us-west-1 update-kubeconfig --name ${{ needs.terraform.outputs.eks_name }}
           kubectl create namespace bot --dry-run=client -o yaml | kubectl apply -f -
