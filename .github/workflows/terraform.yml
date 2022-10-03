@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: terraform-artifact
-          path: terraform-artifact
+          path: terraform/terraform-artifact

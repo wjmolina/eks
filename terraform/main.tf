@@ -134,7 +134,7 @@ resource "aws_ecr_repository" "eks" {
   }
 }
 
-resource "local_file" "terraform-artifact" {
+resource "local_file" "terraform_artifact" {
   content  = <<EOT
     eks_name=${aws_eks_cluster.eks.name}
     ecr_arn=${aws_ecr_repository.eks.arn}
