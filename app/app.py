@@ -25,7 +25,7 @@ def create_milestones_content():
 
     milestones_message = ""
 
-    for author_id, milestones in data.items():
+    for author_id, milestones in sorted(data.items()):
         milestones_message += bot.get_user(author_id).mention + "\n"
         milestones_message += "```\n"
 
