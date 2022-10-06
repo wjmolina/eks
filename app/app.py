@@ -64,6 +64,7 @@ async def create_or_read_channel_singleton(id):
 )
 async def create_milestone(
     ctx,
+    *,
     date=Parameter("date", Parameter.POSITIONAL_ONLY, description="YYYY-MM-DD"),
     text=Parameter("text", Parameter.POSITIONAL_ONLY, description="Write your milestone here."),
 ):
@@ -74,7 +75,7 @@ async def create_milestone(
         Item={
             "MilestoneId": str(uuid.uuid4()),
             "Date": date,
-            "Text": " ".join(text),
+            "Text": text,
             "AuthorId": ctx.author.id,
         },
     )
