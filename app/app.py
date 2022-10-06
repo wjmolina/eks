@@ -62,11 +62,11 @@ async def create_or_read_channel_singleton(id):
     brief="Create a milestone.",
     help="Given a date and some text, this command will update the message in the milestones channel with this information.",
 )
-async def create_milestone(ctx, date, text):
-    """
-    date: str = YYYY-MM-DD
-    text: str = Write your milestone here.
-    """
+async def create_milestone(
+    ctx,
+    date: "YYYY-MM-DD",
+    text: "Write your milestone here.",
+):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
