@@ -78,8 +78,7 @@ async def create_milestone(
             "AuthorId": ctx.author.id,
         },
     )
-    content = create_milestones_content()
-    await singleton.edit(content=content)
+    await singleton.edit(content=create_milestones_content())
     await ctx.send("success")
 
 
@@ -97,8 +96,7 @@ async def delete_milestone(
             "MilestoneId": id,
         }
     )
-    content = create_milestones_content()
-    await singleton.edit(content=content)
+    await singleton.edit(content=create_milestones_content())
     await ctx.send("success")
 
 
