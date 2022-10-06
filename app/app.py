@@ -6,12 +6,12 @@ from datetime import datetime, timedelta
 
 import boto3
 from discord import Intents
-from discord.ext import commands
+from discord.ext.commands import Bot
 
 intents = Intents.default()
 intents.message_content = True
 intents.members = True
-bot = commands.Bot("!", intents=intents)
+bot = Bot("!", intents=intents)
 
 milestones_table = boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones")
 milestones_channel_id = 1025250447847587870
@@ -61,12 +61,8 @@ async def create_or_read_channel_singleton(id):
 @bot.command(
     brief="Create a milestone.",
     description="Given a date and some text, this command will update the message in the milestones channel with this information.",
-    arguments={
-        "date": "YYYY-MM-DD",
-        "text": "Write your text.",
-    },
 )
-async def create_milestone(ctx, date, *text):
+async def create_milestone(ctx, date="YYYY-MM-DD", text="Write your milestone here."):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
@@ -74,7 +70,7 @@ async def create_milestone(ctx, date, *text):
         Item={
             "MilestoneId": str(uuid.uuid4()),
             "Date": date,
-            "Text": " ".join(text[1:]),
+            "Text": " ".join(text),
             "AuthorId": ctx.author.id,
         },
     )
