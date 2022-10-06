@@ -58,14 +58,15 @@ async def create_or_read_channel_singleton(id):
     return singleton
 
 
-@bot.command(brief="Create a milestone.")
+@bot.command(
+    brief="Create a milestone.",
+    description="Given a date and some text, this command will update the message in the milestones channel with this information.",
+    arguments={
+        "date": "YYYY-MM-DD",
+        "text": "Write your text.",
+    },
+)
 async def create_milestone(ctx, date, *text):
-    """Given a date and some text, this command will update the message in the milestones channel with this information.
-
-    Arguments:
-        date: YYYY-MM-DD
-        text: Write your text.
-    """
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
