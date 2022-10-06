@@ -64,9 +64,8 @@ async def create_or_read_channel_singleton(id):
 )
 async def create_milestone(
     ctx,
-    *,
-    date=Parameter("date", Parameter.POSITIONAL_ONLY, description="YYYY-MM-DD"),
-    text=Parameter("text", Parameter.POSITIONAL_ONLY, description="Write your milestone here."),
+    date=Parameter("date", Parameter.POSITIONAL_OR_KEYWORD, description="YYYY-MM-DD"),
+    text=Parameter("text", Parameter.VAR_POSITIONAL, description="Write your milestone here."),
 ):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
