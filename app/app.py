@@ -64,15 +64,15 @@ async def create_or_read_channel_singleton(id):
         "description": "Given a date and some text, this command will update the message in the milestones channel with this information.",
     }
 )
-async def create_milestone(ctx, *args):
+async def create_milestone(ctx, date, *text):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
-    datetime.strptime(args[0], "%Y-%m-%d")
+    datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
         TableName="Milestones",
         Item={
             "MilestoneId": str(uuid.uuid4()),
-            "Date": args[0],
-            "Text": " ".join(args[1:]),
+            "Date": date,
+            "Text": " ".join(text[1:]),
             "AuthorId": ctx.author.id,
         },
     )
