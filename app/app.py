@@ -65,6 +65,12 @@ async def create_or_read_channel_singleton(id):
     }
 )
 async def create_milestone(ctx, date, *text):
+    """Create a milestone.
+
+    Args:
+        date (str): date!
+        text (str): text!
+    """
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
