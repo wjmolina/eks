@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 import boto3
 from discord import Intents
-from discord.ext.commands import Bot
+from discord.ext.commands import Bot, Parameter
 
 intents = Intents.default()
 intents.message_content = True
@@ -62,7 +62,11 @@ async def create_or_read_channel_singleton(id):
     brief="Create a milestone.",
     help="Given a date and some text, this command will update the message in the milestones channel with this information.",
 )
-async def create_milestone(ctx, date: str, text: str):
+async def create_milestone(
+    ctx,
+    date=Parameter("date", Parameter.POSITIONAL_ONLY, description="YYYY-MM-DD"),
+    text=Parameter("text", Parameter.POSITIONAL_ONLY, description="Write your milestone here."),
+):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
