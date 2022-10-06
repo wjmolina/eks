@@ -21,7 +21,7 @@ def create_milestones_content():
     data = defaultdict(list)
 
     for item in milestones_table.scan()["Items"]:
-        insort(data[item["AuthorId"]], [item["Date"], item["Text"]])
+        insort(data[item["AuthorId"]], [item["MilestoneId"], item["Date"], item["Text"]])
 
     milestones_message = ""
 
@@ -29,10 +29,10 @@ def create_milestones_content():
         milestones_message += bot.get_user(author_id).mention + "\n"
         milestones_message += "```\n"
 
-        for date, text in milestones:
+        for milestone_id, date, text in milestones:
             date = datetime.strptime(date, "%Y-%m-%d")
             if (datetime.now() - date) < timedelta(days=7):
-                milestones_message += f"{date.strftime('%b %d, %Y')}: {text}\n"
+                milestones_message += f"{milestone_id} | {date.strftime('%b %d, %Y')} | {text}\n"
 
         milestones_message += "```\n"
 
@@ -77,6 +77,25 @@ async def create_milestone(
             "Text": text,
             "AuthorId": ctx.author.id,
         },
+    )
+    content = create_milestones_content()
+    await singleton.edit(content=content)
+    await ctx.send("success")
+
+
+@bot.command(
+    brief="Delete a milestone.",
+    help="Given a milestone ID, this command will delete the associated milestone.",
+)
+async def delete_milestone(
+    ctx,
+    id=Parameter("id", Parameter.POSITIONAL_OR_KEYWORD, description="Milestone ID"),
+):
+    singleton = await create_or_read_channel_singleton(milestones_channel_id)
+    milestones_table.delete_item(
+        Key={
+            "MilestoneId": id,
+        }
     )
     content = create_milestones_content()
     await singleton.edit(content=content)
