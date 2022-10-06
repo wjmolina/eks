@@ -58,12 +58,12 @@ async def create_or_read_channel_singleton(id):
     return singleton
 
 
-@bot.command()
-async def ping(ctx, *args):
-    await ctx.send("pong")
-
-
-@bot.command()
+@bot.command(
+    **{
+        "brief": "Create a milestone.",
+        "description": "Given a date and some text, this command will update the message in the milestones channel with this information.",
+    }
+)
 async def create_milestone(ctx, *args):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(args[0], "%Y-%m-%d")
