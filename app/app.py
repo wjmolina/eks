@@ -9,7 +9,7 @@ from boto3.dynamodb.conditions import Attr
 from discord import Intents
 from discord.ext.commands import Bot, Parameter
 
-from connect_four import is_game_over, make_move, pos_to_board, visualize_board
+from connect_four import get_is_game_over_winner, make_move, pos_to_board, visualize_board
 
 intents = Intents.default()
 intents.message_content = True
@@ -122,7 +122,7 @@ async def make_connect_four_move(ctx, move):
     item = items[0]
     item["Position"] = make_move(item["Position"], move)
     board = pos_to_board(item["Position"])
-    item["IsGameOver"] = is_game_over(board)
+    item["IsGameOver"] = get_is_game_over_winner(board)
     connect_four_table.put_item(Item=item)
     await ctx.send(visualize_board(board))
 

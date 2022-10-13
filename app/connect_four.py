@@ -12,7 +12,7 @@ def make_move(pos: str, move: str) -> str:
 
     new_pos = pos + move
 
-    if is_game_over(pos_to_board(new_pos)):
+    if get_is_game_over_winner(pos_to_board(new_pos))[0]:
         return new_pos
 
     score = requests.get(
@@ -27,7 +27,7 @@ def make_move(pos: str, move: str) -> str:
 
 
 def visualize_board(board: str) -> str:
-    moves = [":red_circle:", ":yellow_circle:"]
+    tiles = [":white_circle:", ":red_circle:", ":yellow_circle:"]
     result = ""
     count = 0
 
@@ -36,18 +36,20 @@ def visualize_board(board: str) -> str:
             if board[i][j] == 0:
                 result += ":white_circle:"
             elif board[i][j] == 1:
-                result += moves[0]
+                result += tiles[1]
                 count += 1
             else:
-                result += moves[1]
+                result += tiles[2]
                 count += 1
 
         result += "\n"
 
-    if is_game_over(board):
-        message = " **winner** " + moves[(count + 1) % 2]
+    is_game_over, winner = get_is_game_over_winner(board)
+
+    if is_game_over:
+        message = " **winner** " + tiles[winner * (3 * winner - 1) // 2]
     else:
-        message = " **your turn** " + moves[count % 2]
+        message = " **your turn** " + tiles[count % 2 + 1]
 
     return result[:-1] + message
 
@@ -66,34 +68,34 @@ def pos_to_board(pos: str) -> list[list[int]]:
     return board
 
 
-def is_game_over(board: list[list[int]]) -> bool:
+def get_is_game_over_winner(board: list[list[int]]) -> tuple[bool, int]:
     for i in range(6):
         for j in range(4):
             section = {board[i][j + k] for k in range(4)}
 
             if section == {1} or section == {-1}:
-                return True
+                return True, section.pop()
     for i in range(3):
         for j in range(7):
             section = {board[i + k][j] for k in range(4)}
 
             if section == {1} or section == {-1}:
-                return True
+                return True, section.pop()
     for i in range(3):
         for j in range(4):
             section = {board[i + k][j + k] for k in range(4)}
 
             if section == {1} or section == {-1}:
-                return True
+                return True, section.pop()
     for i in range(3, 6):
         for j in range(4):
             section = {board[i - k][j + k] for k in range(4)}
 
             if section == {1} or section == {-1}:
-                return True
+                return True, section.pop()
 
     for j in range(7):
         if board[0][j] == 0:
-            return False
+            return False, 0
 
-    return True
+    return True, 0
