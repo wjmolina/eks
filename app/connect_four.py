@@ -42,7 +42,7 @@ def visualize_board(board: str) -> str:
     else:
         message = " **your turn** " + moves[count % 2]
 
-    return result[:-2] + message
+    return result[:-1] + message
 
 
 def pos_to_board(pos: str) -> list[list[int]]:
