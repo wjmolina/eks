@@ -20,16 +20,25 @@ def make_move(pos: str, move: str) -> str:
 def visualize_board(board: str) -> str:
     moves = [":red_circle:", ":yellow_circle:"]
     result = ""
+    count = 0
     for i in range(6):
         for j in range(7):
             if board[i][j] == 0:
                 result += ":white_circle:"
             elif board[i][j] == 1:
                 result += moves[0]
+                count += 1
             else:
                 result += moves[1]
+                count += 1
         result += "\n"
-    return result
+
+    if is_game_over(board):
+        message = "game over"
+    else:
+        message = "your turn " + moves[count % 2]
+
+    return result + message
 
 
 def pos_to_board(pos: str) -> list[list[int]]:
