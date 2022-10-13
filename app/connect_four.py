@@ -4,7 +4,7 @@ import requests
 
 
 def make_move(pos: str, move: str) -> str:
-    if pos.count(move) == 6 or not 1 <= int(move) <= 7:
+    if pos.count(move) == 6 or move != "skip" and not 1 <= int(move) <= 7:
         return pos
 
     new_pos = pos + move
