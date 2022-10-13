@@ -8,6 +8,10 @@ def make_move(pos: str, move: str) -> str:
         return pos
 
     new_pos = pos + move
+
+    if is_game_over(pos_to_board(new_pos)):
+        return new_pos
+
     score = requests.get(
         "https://connect4.gamesolver.org/solve?pos=" + new_pos,
         headers={
