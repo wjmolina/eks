@@ -109,7 +109,7 @@ resource "aws_eks_node_group" "eks" {
   }
 }
 
-resource "aws_dynamodb_table" "eks" {
+resource "aws_dynamodb_table" "milestones" {
   tags = {
     "Owner" = "wmolina"
   }
@@ -118,6 +118,19 @@ resource "aws_dynamodb_table" "eks" {
   billing_mode = "PAY_PER_REQUEST"
   attribute {
     name = "MilestoneId"
+    type = "S"
+  }
+}
+
+resource "aws_dynamodb_table" "connect_four" {
+  tags = {
+    "Owner" = "wmolina"
+  }
+  name         = "ConnectFour"
+  hash_key     = "GameId"
+  billing_mode = "PAY_PER_REQUEST"
+  attribute {
+    name = "GameId"
     type = "S"
   }
 }

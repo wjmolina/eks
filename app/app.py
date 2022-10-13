@@ -5,8 +5,11 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 import boto3
+from boto3.dynamodb.conditions import Attr
 from discord import Intents
 from discord.ext.commands import Bot, Parameter
+
+from connect_four import is_game_over, make_move, pos_to_board, visualize_board
 
 intents = Intents.default()
 intents.message_content = True
@@ -14,6 +17,8 @@ intents.members = True
 bot = Bot("!", intents=intents)
 
 milestones_table = boto3.resource("dynamodb", region_name="us-west-1").Table("Milestones")
+connect_four_table = boto3.resource("dynamodb", region_name="us-west-1").Table("ConnectFour")
+
 milestones_channel_id = 1025250447847587870
 
 
@@ -70,13 +75,12 @@ async def create_milestone(
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
     milestones_table.put_item(
-        TableName="Milestones",
         Item={
             "MilestoneId": str(uuid.uuid4()),
             "Date": date,
             "Text": text,
             "AuthorId": ctx.author.id,
-        },
+        }
     )
     await singleton.edit(content=create_milestones_content())
     await ctx.send("success")
@@ -91,13 +95,36 @@ async def delete_milestone(
     id=Parameter("id", Parameter.POSITIONAL_OR_KEYWORD, description="Milestone ID"),
 ):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
-    milestones_table.delete_item(
-        Key={
-            "MilestoneId": id,
-        }
-    )
+    milestones_table.delete_item(Attr={"MilestoneId": id})
     await singleton.edit(content=create_milestones_content())
     await ctx.send("success")
+
+
+@bot.command()
+async def make_connect_four_move(ctx, move):
+    def get_items():
+        return connect_four_table.scan(FilterExpression=Attr("PlayerId").eq(ctx.author.id) & Attr("IsGameOver").eq(False))["Items"]
+
+    items = get_items()
+
+    if not items:
+        connect_four_table.put_item(
+            Item={
+                "GameId": str(uuid.uuid4()),
+                "PlayerId": ctx.author.id,
+                "Position": "",
+                "IsGameOver": False,
+                "Date": str(datetime.utcnow()),
+            }
+        )
+        items = get_items()
+
+    item = items[0]
+    item["Position"] = make_move(item["Position"], move)
+    board = pos_to_board(item["Position"])
+    item["IsGameOver"] = is_game_over(board)
+    connect_four_table.put_item(Item=item)
+    await ctx.send(visualize_board(board))
 
 
 bot.run(os.environ["BOT_TOKEN"])
