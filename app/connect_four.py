@@ -38,7 +38,7 @@ def visualize_board(board: str) -> str:
         result += "\n"
 
     if is_game_over(board):
-        message = " **game over**"
+        message = " **winner** " + moves[(count + 1) % 2]
     else:
         message = " **your turn** " + moves[count % 2]
 
