@@ -70,7 +70,7 @@ async def create_or_read_channel_singleton(id):
 async def create_milestone(
     ctx,
     date=Parameter("date", Parameter.POSITIONAL_OR_KEYWORD, description="YYYY-MM-DD"),
-    text=Parameter("text", Parameter.VAR_POSITIONAL, description="Write your milestone here."),
+    text=Parameter("text", Parameter.VAR_POSITIONAL, description="Write your milestone here in quotes."),
 ):
     singleton = await create_or_read_channel_singleton(milestones_channel_id)
     datetime.strptime(date, "%Y-%m-%d")
@@ -100,8 +100,14 @@ async def delete_milestone(
     await ctx.send("success")
 
 
-@bot.command()
-async def make_connect_four_move(ctx, move):
+@bot.command(
+    brief="Play Connect Four.",
+    help="Play Connect Four against an AI that taught itself in a few hours.",
+)
+async def connect_four(
+    ctx,
+    move=Parameter("move", Parameter.POSITIONAL_OR_KEYWORD, description="a number from 1 to 7 representing the column"),
+):
     def get_items():
         return connect_four_table.scan(FilterExpression=Attr("PlayerId").eq(ctx.author.id) & Attr("IsGameOver").eq(False))["Items"]
 
