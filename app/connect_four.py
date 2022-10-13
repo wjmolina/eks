@@ -4,7 +4,7 @@ import requests
 
 
 def make_move(pos: str, move: str) -> str:
-    if pos.count(move) == 6:
+    if pos.count(move) == 6 or not 1 <= move <= 7:
         return pos
     new_pos = pos + move
     score = requests.get(
