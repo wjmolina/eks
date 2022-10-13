@@ -109,7 +109,7 @@ resource "aws_eks_node_group" "eks" {
   }
 }
 
-resource "aws_dynamodb_table" "milestones" {
+resource "aws_dynamodb_table" "eks" {
   tags = {
     "Owner" = "wmolina"
   }
