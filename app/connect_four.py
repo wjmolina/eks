@@ -27,14 +27,14 @@ def make_move(pos: str, move: str) -> str:
 
 
 def visualize_board(board: str) -> str:
-    tiles = [":white_circle:", ":red_circle:", ":yellow_circle:"]
+    tiles = [":black_large_square:", ":x:", ":o:"]
     result = ""
     count = 0
 
     for i in range(6):
         for j in range(7):
             if board[i][j] == 0:
-                result += ":white_circle:"
+                result += ":black_large_square:"
             elif board[i][j] == 1:
                 result += tiles[1]
                 count += 1
