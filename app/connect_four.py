@@ -2,6 +2,10 @@ from itertools import cycle
 
 import requests
 
+PLAYER_0 = ":white_circle:"
+PLAYER_1 = ":red_circle:"
+PLAYER_2 = ":yellow_circle:"
+
 
 def make_move(pos: str, move: str) -> str:
     if pos.count(move) == 6 or move.isnumeric() and not 1 <= int(move) <= 7:
@@ -27,14 +31,14 @@ def make_move(pos: str, move: str) -> str:
 
 
 def visualize_board(board: str) -> str:
-    tiles = [":black_large_square:", ":x:", ":o:"]
+    tiles = [PLAYER_0, PLAYER_1, PLAYER_2]
     result = ""
     count = 0
 
     for i in range(6):
         for j in range(7):
             if board[i][j] == 0:
-                result += ":black_large_square:"
+                result += PLAYER_0
             elif board[i][j] == 1:
                 result += tiles[1]
                 count += 1
