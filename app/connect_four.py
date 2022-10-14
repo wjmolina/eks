@@ -7,11 +7,11 @@ PLAYER_1 = ":red_circle:"
 PLAYER_2 = ":yellow_circle:"
 
 
-def make_move(pos: str, move: str) -> str:
-    if pos.count(move) == 6 or move.isnumeric() and not 1 <= int(move) <= 7:
+def make_move(pos: str, move: str = "") -> str:
+    if not move or pos.count(move) == 6 or move.isnumeric() and not 1 <= int(move) <= 7:
         return pos
 
-    if move.lower() == "skip":
+    if move.lower() == "play":
         move = ""
 
     new_pos = pos + move
