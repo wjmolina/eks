@@ -132,10 +132,10 @@ async def connect_four(
     else:
         item["Position"] = make_move(item["Position"], move)
         board = pos_to_board(item["Position"])
+        await ctx.send(visualize_board(board))
         item["IsGameOver"] = get_is_game_over_winner(board)[0]
 
     connect_four_table.put_item(Item=item)
-    await ctx.send(visualize_board(board))
 
 
 bot.run(os.environ["BOT_TOKEN"])
